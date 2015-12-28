@@ -26,6 +26,7 @@ var express = require('express'),
 var bodyParser = require('body-parser');
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
+app.use(express.static('minimum'));
 
 // Bootstrap application settings
 require('./config/express')(app);
@@ -35,6 +36,7 @@ var credentials = extend({
   version: 'v1',
   username: '<username>',
   password: '<password>'
+    
 }, bluemix.getServiceCreds('tradeoff_analytics')); // VCAP_SERVICES
 
 // Create the service wrapper

@@ -9,7 +9,7 @@
   <script>
   (function(){
     var ta;
-    var problemPath = 'problems/finance.json';
+    var problemPath = 'data.json';
     
     function onPageLoad() {
       $('.loading').show();
@@ -18,7 +18,7 @@
     
     function loadTradeoffAnalytics(node, callback) {
       var taClient = new TradeoffAnalytics({
-          dilemmaServiceUrl: '/dilemmas',
+          dilemmaServiceUrl: '/demo/dilemmas',
       }, node);
       taClient.start(callback);
       return taClient;
@@ -42,7 +42,7 @@
 <body>
   <div id="ta" style="height:700px">
     <span class="loading">
-      <img src="/images/loading.gif" title="Loading...">
+      <img src="loading.gif" title="Loading...">
       <span style="margin-left:5px">Loading...</span>
     </span>
   </div>
