@@ -36,7 +36,6 @@ var credentials = extend({
   version: 'v1',
   username: '<username>',
   password: '<password>'
-    
 }, bluemix.getServiceCreds('tradeoff_analytics')); // VCAP_SERVICES
 
 // Create the service wrapper
