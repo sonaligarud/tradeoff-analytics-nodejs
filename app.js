@@ -34,6 +34,7 @@ require('./config/express')(app);
 // if bluemix credentials exists, then override local
 var credentials = extend({
   version: 'v1',
+  url: '<url>',
   username: '<username>',
   password: '<password>'
 }, bluemix.getServiceCreds('tradeoff_analytics')); // VCAP_SERVICES
