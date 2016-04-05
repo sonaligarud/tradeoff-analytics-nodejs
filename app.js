@@ -1,5 +1,5 @@
 /**
- * Copyright 2014 IBM Corp. All Rights Reserved.
+ * Copyright 2015 IBM Corp. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,69 +16,106 @@
 
 'use strict';
 
-var express = require('express'),
-  app = express(),
-  bluemix = require('./config/bluemix'),
-  watson = require('watson-developer-cloud'),
-  extend = require('util')._extend;
+// load environment properties from a .env file for local development
+require('dotenv').load({silent: true});
 
-//avoid "request too large" exception
-var bodyParser = require('body-parser');
-app.use(bodyParser.json({limit: '50mb'}));
-app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
-app.use(express.static('minimum'));
-
+var express    = require('express'),
+  app          = express();
 // Bootstrap application settings
 require('./config/express')(app);
 
-// if bluemix credentials exists, then override local
-var credentials = extend({
-  version: 'v1',
-  url: '<url>',
-  username: '<username>',
-  password: '<password>'
-}, bluemix.getServiceCreds('tradeoff_analytics')); // VCAP_SERVICES
+//integration with tradeoff analytics service
+var tradeoffAnalyticsConfig = require('./config/tradeoff-analytics-config');
 
-// Create the service wrapper
-var tradeoffAnalytics = watson.tradeoff_analytics(credentials);
+tradeoffAnalyticsConfig.setupToken(app, {//for dev purposes. in bluemix it is taken from VCAP. 
+  url: process.env.TA_URL || 'https://gateway.watsonplatform.net/tradeoff-analytics/api/v1',
+  username: process.env.TA_USERNAME,
+  password: process.env.TA_PASSWORD,
+  version: 'v1'
+});
 
-// render index page
 app.get('/', function(req, res) {
-  res.render('index');
+  res.render('index', {
+    ct: req._csrfToken,
+    GOOGLE_ANALYTICS_ID: process.env.GOOGLE_ANALYTICS_ID
+  });
 });
-
-app.post('/demo/dilemmas/', function(req, res) {
-  var params = extend(req.body);
-  params.metadata_header = getMetadata(req);
-  
-  tradeoffAnalytics.dilemmas(params, function(err, dilemma) {
-    if (err) 
-      return res.status(Number(err.code) || 502).send(err.error || err.message || 'Error processing the request');
-    else
-      return res.json(dilemma);
+app.get('/refresh', function(req, res) {
+  refreshData();
+  res.writeHead(200);
+  res.end();
+});
+app.get('/last_refresh', function(req, res) {
+  lastRefresh(function(time){
+    res.writeHead(200, { 'Content-Type': 'text/plain'});
+    res.write(time.toJSON());
+    res.end();
   });
 });
 
-app.post('/demo/events/', function(req, res) {
-  var params = extend(req.body);
-  params.metadata_header = getMetadata(req);
-  
-  tradeoffAnalytics.events(params, function(err) {
-    if (err)
-      return res.status(Number(err.code) || 502).send(err.error || err.message || 'Error forwarding events');
-    else
-      return res.send();
-  });
-});
+var FILE_RAW = 'config/edmunds/cars_raw.json';
+var FILE_PROBLEM = './public/data/auto.json';
+var edmunds = require('./config/edmunds/Edmunds');
+var fs = require('fs');
 
-function getMetadata(req) {
-	var metadata = req.header('x-watson-metadata');
-	if (metadata) {
-		metadata += "client-ip:" + req.ip;
-	}
-	return metadata;
+var SECOND = 1000,
+  MINUTE= 60*SECOND,
+  HOUR = 60*MINUTE;
+var MAX_TIME_BETWEEN_IMPORTS = 24*HOUR;
+var TIME_BETWEEN_CHECKS = 1*HOUR;
+
+var refreshing= false;
+
+function checkForRefresh(){
+  lastRefresh(function(lastImportTime){
+    var duration = (new Date() - lastImportTime);
+    if(duration>MAX_TIME_BETWEEN_IMPORTS && !refreshing){
+      refreshData();
+    }
+  });
 }
+function refreshData(){
+  if(refreshing){
+    return;
+  }
+  var startTime = Date.now();
+  refreshing = true;
+  function onFailure(err){
+    console.log('import failed. \n'+ err);
+    refreshing = false;
+  }
+  try{
+    edmunds.importEdmunds(function(data){// brings the data from RAW file instead from API
+      fs.writeFile(FILE_RAW, JSON.stringify(data,  null, 2));
+//      var data= JSON.parse(fs.readFileSync(FILE_RAW));
+  
+      edmunds.mapEdmunds(data, function(problem){
+        fs.writeFile(FILE_PROBLEM, JSON.stringify(problem,  null, 2));
+        refreshing = false;
+  
+        var duration  = (Date.now() - startTime),
+          m= Math.floor(duration/MINUTE),
+          s= Math.floor((duration-m*MINUTE)/SECOND);
+        console.log("Duration: "+m+"M:"+s+"s");
+      });
+    }, onFailure);
+  }catch(e){
+    onFailure(e);
+  }
+    //the server will retry in the next check interval;
+}
+setInterval(checkForRefresh, TIME_BETWEEN_CHECKS);
 
-var port = process.env.VCAP_APP_PORT || 3000;
-app.listen(port);
-console.log('listening at:', port);
+function lastRefresh(callback){
+  fs.stat(FILE_PROBLEM, function(err, stats){
+    if(stats){//file exist
+      callback(new Date(stats.mtime));
+    }else{
+      callback(new Date(0));
+    }
+  });
+}
+checkForRefresh();
+
+
+module.exports = app;
