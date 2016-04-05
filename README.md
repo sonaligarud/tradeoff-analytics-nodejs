@@ -49,7 +49,7 @@ See the full [Getting Started][getting_started] documentation for more details, 
 ## Running locally
   The application uses [Node.js](http://nodejs.org/) and [npm](https://www.npmjs.com/) so you will have to download and install them as part of the steps below.
 
-1. Copy the credentials from your `tradeoff-analytics-standard-service` service in Bluemix to `app.js`, you can see the credentials using:
+1. Copy the credentials from your `tradeoff-analytics-standard-service` service in Bluemix to `app.js` (or environment properties, or a [.env file]). You can see the credentials using:
 
     ```sh
     $ cf env <application-name>
@@ -74,12 +74,9 @@ See the full [Getting Started][getting_started] documentation for more details, 
     ```
 
     You need to copy `username`, `password` and `url`.
-
 2. Install [Node.js](http://nodejs.org/)
-3. Go to the project folder in a terminal and run:
-    `npm install`
-4. Start the application
-5.  `node app.js`
+3. Go to the project folder in a terminal and run `npm install`
+4. Start the application: `npm start`
 6. Go to `http://localhost:3000`
 
 ## Troubleshooting
@@ -89,19 +86,49 @@ To troubleshoot your Bluemix app the main useful source of information are the l
   ```sh
   $ cf logs <application-name> --recent
   ```
+  
+## Getting Help
+
+If you get stuck, try [dW Answers] or [Stack Overflow] first, as you will generally get a faster response there.
+However, you may also [file a ticket here][github], especially if you believe there is an issue is in the demo app itself.
+
 
 ## License
 
-  This sample code is licensed under Apache 2.0. Full license text is available in [LICENSE](LICENSE).
+This sample code is licensed under Apache 2.0. Full license text is available in [LICENSE](LICENSE).
 
 ## Contributing
 
-  See [CONTRIBUTING](CONTRIBUTING.md).
+See [CONTRIBUTING](CONTRIBUTING.md).
+
 
 ## Open Source @ IBM
-  Find more open source projects on the [IBM Github Page](http://ibm.github.io/)
+
+Find more open source projects on the [IBM Github Page](http://ibm.github.io/)
+
+
+## Privacy Notice
+
+This node sample web application includes code to track deployments to Bluemix and other [Cloud Foundry] platforms. The following information is sent to a [Deployment Tracker][deploy_track_url] service on each deployment:
+
+* Application Name (`application_name`)
+* Space ID (`space_id`)
+* Application Version (`application_version`)
+* Application URIs (`application_uris`)
+
+This data is collected from the `VCAP_APPLICATION` environment variable in IBM Bluemix and other Cloud Foundry platforms. This data is used by IBM to track metrics around deployments of sample applications to IBM Bluemix. Only deployments of sample applications that include code to ping the Deployment Tracker service will be tracked.
+
+### Disabling Deployment Tracking
+
+Deployment tracking can be disabled by removing `require('cf-deployment-tracker-client').track();` from the beginning of the `server.js` file at the root of this repo.
+
+[deploy_track_url]: https://github.com/cloudant-labs/deployment-tracker
 
 [service_url]: http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/tradeoff-analytics.html
 [cloud_foundry]: https://github.com/cloudfoundry/cli
 [getting_started]: http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/doc/getting_started/
 [sign_up]: https://apps.admin.ibmcloud.com/manage/trial/bluemix.html?cm_mmc=WatsonDeveloperCloud-_-LandingSiteGetStarted-_-x-_-CreateAnAccountOnBluemixCLI
+[.env file]: https://www.npmjs.com/package/dotenv
+[dW answers]: https://developer.ibm.com/answers/smart-spaces/25/watson.html
+[Stack Overflow]: http://stackoverflow.com/questions/tagged/ibm-watson
+[github]: https://github.com/watson-developer-cloud/tradeoff-analytics-nodejs/issues

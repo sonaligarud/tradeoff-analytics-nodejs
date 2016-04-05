@@ -18,23 +18,21 @@
 
 // Module dependencies
 var express    = require('express'),
-  errorhandler = require('errorhandler'),
   bodyParser   = require('body-parser');
 
 module.exports = function (app) {
 
   // Configure Express
+  app.set('view engine', 'ejs');
+  //require('ejs').delimiter = '$';
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(bodyParser.json());
 
   // Setup static public directory
   app.use(express.static(__dirname + '/../public'));
-  app.set('view engine', 'jade');
-  app.set('views', __dirname + '/../views');
 
-  // Add error handling in dev
-  if (!process.env.VCAP_SERVICES) {
-    app.use(errorhandler());
-  }
+  // Only loaded when SECURE_EXPRESS is `true`
+  if (process.env.SECURE_EXPRESS)
+    require('./security')(app);
 
 };

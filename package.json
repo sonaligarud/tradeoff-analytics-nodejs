@@ -1,34 +1,47 @@
 {
-  "name": "TradeoffAnalyticsNodejsStarterApp",
-  "version": "0.1.3",
+  "name": "tradeoff-analytics-demo",
+  "version": "2.0.0",
   "description": "A sample nodejs app for Bluemix that use the Tradeoff Analytics service",
-  "dependencies": {
-    "body-parser": "~1.14.1",
-    "errorhandler": "~1.4.2",
-    "express": "~4.13.4",
-    "jade": "~1.11.0",
-    "request": "~2.67.0",
-    "watson-developer-cloud": "~1.2.1"
-  },
-  "engines": {
-    "node": ">=0.10.38"
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/watson-developer-cloud/tradeoff-analytics-nodejs.git"
   },
   "author": "IBM Corp.",
-  "contributors": [
-    {
-      "name": "German Attanasio Ruiz",
-      "email": "germanatt@us.ibm.com"
-    }
-  ],
+  "contributors": [{
+    "name": "Eva Xiaohui Luo",
+    "email": "evaluo_xhl@us.ibm.com"
+  }, {
+    "name": "David Boaz"
+  }, {
+    "name": "Nathan Friedly",
+    "email": "nfriedly@us.ibm.com",
+    "url": "http://nfriedly.com"
+  }],
   "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/watson-developer-cloud/tradeoff-analytics-nodejs/issues"
   },
   "scripts": {
-    "start": "node app.js"
+    "start": "node server.js",
+    "gulp": "gulp",
+    "lint": "eslint .",
+    "autofix": "eslint --fix .",
+    "test": "npm run lint"
+  },
+  "dependencies": {
+    "body-parser": "^1.13.2",
+    "cf-deployment-tracker-client": "0.0.8",
+    "cookie-parser": "^1.4.1",
+    "csurf": "^1.8.3",
+    "dotenv": "^2.0.0",
+    "ejs": "^2.3.4",
+    "express": "^4.12.2",
+    "express-rate-limit": "^2.1.2",
+    "express-secure-only": "^0.2.1",
+    "helmet": "^1.3.0",
+    "log4js": "^0.6.33",
+    "request": "^2.69.0",
+    "underscore": "1.8.3",
+    "watson-developer-cloud": "^0.10.5"
   }
 }
