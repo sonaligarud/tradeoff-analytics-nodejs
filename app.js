@@ -27,10 +27,10 @@ require('./config/express')(app);
 //integration with tradeoff analytics service
 var tradeoffAnalyticsConfig = require('./config/tradeoff-analytics-config');
 
-tradeoffAnalyticsConfig.setupToken(app, {//for dev purposes. in bluemix it is taken from VCAP. 
+tradeoffAnalyticsConfig.setupToken(app, {//for dev purposes. in bluemix it is taken from VCAP.
   url: process.env.TA_URL || 'https://gateway.watsonplatform.net/tradeoff-analytics/api/v1',
-  username: process.env.TA_USERNAME,
-  password: process.env.TA_PASSWORD,
+  username: process.env.TA_USERNAME || 'USERNAME',
+  password: process.env.TA_PASSWORD || 'PASSWORD',
   version: 'v1'
 });
 
@@ -88,11 +88,11 @@ function refreshData(){
     edmunds.importEdmunds(function(data){// brings the data from RAW file instead from API
       fs.writeFile(FILE_RAW, JSON.stringify(data,  null, 2));
 //      var data= JSON.parse(fs.readFileSync(FILE_RAW));
-  
+
       edmunds.mapEdmunds(data, function(problem){
         fs.writeFile(FILE_PROBLEM, JSON.stringify(problem,  null, 2));
         refreshing = false;
-  
+
         var duration  = (Date.now() - startTime),
           m= Math.floor(duration/MINUTE),
           s= Math.floor((duration-m*MINUTE)/SECOND);

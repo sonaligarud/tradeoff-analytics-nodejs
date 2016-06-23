@@ -1,4 +1,4 @@
-# Tradeoff Analytics Node Starter Application
+# Tradeoff Analytics Node Starter Application [![Build Status](https://travis-ci.org/watson-developer-cloud/tradeoff-analytics-nodejs.svg?branch=master)](https://travis-ci.org/watson-developer-cloud/tradeoff-analytics-nodejs)
 
   The IBM Watson [Tradeoff Analytics][service_url] service helps you make
   better choices under multiple conflicting goals. The service combines smart
@@ -24,7 +24,7 @@ Give it a try! Click the button below to fork into IBM DevOps Services and deplo
     name: <application-name>
     command: node app.js
     path: .
-    memory: 128M
+    memory: 256M
   ```
   The name you use will determinate your application url initially, e.g. `<application-name>.mybluemix.net`.
 
@@ -86,7 +86,7 @@ To troubleshoot your Bluemix app the main useful source of information are the l
   ```sh
   $ cf logs <application-name> --recent
   ```
-  
+
 ## Getting Help
 
 If you get stuck, try [dW Answers] or [Stack Overflow] first, as you will generally get a faster response there.

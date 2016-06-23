@@ -1,5 +1,5 @@
 /**
- * Copyright 2014 IBM Corp. All Rights Reserved.
+ * Copyright 2015 IBM Corp. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,23 +16,11 @@
 
 'use strict';
 
-// Module dependencies
-var express    = require('express'),
-  bodyParser   = require('body-parser');
+var app = require('../app');
+var request = require('supertest');
 
-module.exports = function (app) {
-
-  // Configure Express
-  app.set('view engine', 'ejs');
-  //require('ejs').delimiter = '$';
-  app.use(bodyParser.urlencoded({ extended: true }));
-  app.use(bodyParser.json());
-
-  // Setup static public directory
-  app.use(express.static(__dirname + '/../public'));
-
-  // Only loaded when running in Bluemix
-  if (process.env.VCAP_APPLICATION)
-    require('./security')(app);
-
-};
+describe('express', function() {
+  it('load home page when GET /', function(done) {
+    request(app).get('/').expect(200, done);
+  });
+});
