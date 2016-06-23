@@ -1,5 +1,11 @@
 'use strict';
 
+require('dotenv').config({silent: true});
+
+if (process.env.GOOGLE_ANALYTICS_ID) {
+  process.env.GOOGLE_ANALYTICS_ID = process.env.GOOGLE_ANALYTICS_ID.replace(/\"/g, '');
+}
+
 var app = require('./app.js');
 
 // Deployment tracking (optional, helps us out)
