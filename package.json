@@ -27,9 +27,10 @@
   },
   "scripts": {
     "start": "node server.js",
-    "test": "istanbul cover ./node_modules/mocha/bin/_mocha",
+    "test": "npm run lint && npm run test-integration",
     "lint": "eslint .",
     "autofix": "eslint --fix .",
+    "test-integration": "istanbul cover ./node_modules/mocha/bin/_mocha",
     "codecov": "npm run test && (codecov || true)"
   },
   "dependencies": {

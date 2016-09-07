@@ -169,7 +169,7 @@
       });
     }
     function push(task){
-      totalTasks++;
+      //totalTasks++;
       queue.push(task);
     }
     function reqErrFn(errMsg){
