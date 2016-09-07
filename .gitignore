@@ -4,3 +4,4 @@ coverage
 npm-debug.log
 /import.log
 .env
+import.log*
