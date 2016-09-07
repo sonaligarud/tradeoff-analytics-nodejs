@@ -46,13 +46,13 @@
     "log4js": "^0.6.33",
     "request": "^2.69.0",
     "underscore": "1.8.3",
-    "watson-developer-cloud": "^1.9.4"
+    "watson-developer-cloud": "^2.2.0"
   },
   "devDependencies": {
     "codecov": "^1.0.1",
-    "eslint": "^2.8.0",
+    "eslint": "^3.4.0",
     "istanbul": "^0.4.2",
-    "mocha": "^2.4.5",
-    "supertest": "^1.2.0"
+    "mocha": "^3.0.2",
+    "supertest": "^2.0.0"
   }
 }
