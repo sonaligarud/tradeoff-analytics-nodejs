@@ -28,7 +28,7 @@ module.exports = function (app) {
   app.enable('trust proxy');
 
   // 1. redirects http to https
-  //app.use(secure());
+  app.use(secure());
 
   // 2. helmet with custom CSP policy
   var cspReportUrl = '/report-csp-violation';

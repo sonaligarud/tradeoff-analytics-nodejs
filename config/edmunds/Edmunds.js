@@ -116,7 +116,7 @@
     var result;
     var reqSentCount = 0;
     var reqRecievedCount = 0;
-    var totalTasks = 0;
+    //var totalTasks = 0;
     var ignoreResponses = false;
     log("\n\nStart to import data.")
     var interval = setInterval(function(){
