@@ -48,9 +48,6 @@ app.post('/api/tradeoff-analytics-token', function(req, res) {
 });
 
 
-app.get('/', function(req, res) {
-  res.render('index');
-});
 app.get('/refresh', function(req, res) {
   refreshData();
   res.writeHead(200);
