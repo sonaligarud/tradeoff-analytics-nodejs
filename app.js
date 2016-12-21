@@ -24,21 +24,32 @@ var express    = require('express'),
 // Bootstrap application settings
 require('./config/express')(app);
 
-//integration with tradeoff analytics service
-var tradeoffAnalyticsConfig = require('./config/tradeoff-analytics-config');
+var watson = require('watson-developer-cloud');
+var vcapServices = require('vcap_services');
 
-tradeoffAnalyticsConfig.setupToken(app, {//for dev purposes. in bluemix it is taken from VCAP.
-  url: process.env.TA_URL || 'https://gateway.watsonplatform.net/tradeoff-analytics/api/v1',
-  username: process.env.TA_USERNAME || 'USERNAME',
-  password: process.env.TA_PASSWORD || 'PASSWORD',
-  version: 'v1'
+var credentials = Object.assign({
+  username: process.env.TRADEOFF_ANALYTICS_USERNAME || '<username>',
+  password: process.env.TRADEOFF_ANALYTICS_PASSWORD || '<username>',
+  url: process.env.TRADEOFF_ANALYTICS_URL || 'https://gateway.watsonplatform.net/tradeoff-analytics/api',
+  version: 'v1',
+}, vcapServices.getCredentials('tradeoff_analytics'));
+
+var authorizationService = watson.authorization(credentials);
+
+app.post('/api/tradeoff-analytics-token', function(req, res) {
+  authorizationService.getToken(credentials, function (err, token) {
+    if (!token) {
+      console.log('error:', err);
+      res.status(500).send('Error retrieving token');
+    } else {
+      res.send(token);
+    }
+  });
 });
 
+
 app.get('/', function(req, res) {
-  res.render('index', {
-    ct: req._csrfToken,
-    GOOGLE_ANALYTICS_ID: process.env.GOOGLE_ANALYTICS_ID
-  });
+  res.render('index');
 });
 app.get('/refresh', function(req, res) {
   refreshData();
@@ -58,11 +69,11 @@ var FILE_PROBLEM = './public/data/auto.json';
 var edmunds = require('./config/edmunds/Edmunds');
 var fs = require('fs');
 
-var SECOND = 1000,
-  MINUTE= 60*SECOND,
-  HOUR = 60*MINUTE;
-var MAX_TIME_BETWEEN_IMPORTS = 24*HOUR;
-var TIME_BETWEEN_CHECKS = 1*HOUR;
+var SECOND = 1000;
+var MINUTE= 60*SECOND;
+var HOUR = 60*MINUTE;
+var MAX_TIME_BETWEEN_IMPORTS = 24 * HOUR;
+var TIME_BETWEEN_CHECKS = 1 * HOUR;
 
 var refreshing= false;
 
@@ -87,8 +98,6 @@ function refreshData(){
   try{
     edmunds.importEdmunds(function(data){// brings the data from RAW file instead from API
       fs.writeFile(FILE_RAW, JSON.stringify(data,  null, 2));
-//      var data= JSON.parse(fs.readFileSync(FILE_RAW));
-
       edmunds.mapEdmunds(data, function(problem){
         fs.writeFile(FILE_PROBLEM, JSON.stringify(problem,  null, 2));
         refreshing = false;
@@ -96,7 +105,7 @@ function refreshData(){
         var duration  = (Date.now() - startTime),
           m= Math.floor(duration/MINUTE),
           s= Math.floor((duration-m*MINUTE)/SECOND);
-        console.log("Duration: "+m+"M:"+s+"s");
+        console.log('Duration: '+m+'M:'+s+'s');
       });
     }, onFailure);
   }catch(e){

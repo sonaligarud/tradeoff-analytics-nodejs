@@ -34,26 +34,26 @@
     "codecov": "npm run test && (codecov || true)"
   },
   "dependencies": {
-    "body-parser": "^1.13.2",
-    "cf-deployment-tracker-client": "0.1.1",
-    "cookie-parser": "^1.4.1",
-    "csurf": "^1.8.3",
+    "body-parser": "^1.15.2",
+    "cf-deployment-tracker-client": "0.1.2",
+    "cookie-parser": "^1.4.3",
+    "csurf": "^1.9.0",
     "dotenv": "^2.0.0",
-    "ejs": "^2.3.4",
-    "express": "^4.12.2",
-    "express-rate-limit": "^2.1.2",
+    "ejs": "^2.5.5",
+    "express": "^4.14.0",
+    "express-rate-limit": "^2.6.0",
     "express-secure-only": "^0.2.1",
-    "helmet": "^2.1.1",
-    "log4js": "^0.6.33",
-    "request": "^2.69.0",
+    "helmet": "^3.1.0",
+    "log4js": "^1.1.0",
+    "request": "^2.79.0",
     "underscore": "1.8.3",
-    "watson-developer-cloud": "^2.2.0"
+    "watson-developer-cloud": "^2.14.3"
   },
   "devDependencies": {
     "codecov": "^1.0.1",
-    "eslint": "^3.4.0",
-    "istanbul": "^0.4.2",
-    "mocha": "^3.0.2",
-    "supertest": "^2.0.0"
+    "eslint": "^3.12.2",
+    "istanbul": "^0.4.5",
+    "mocha": "^3.2.0",
+    "supertest": "^2.0.1"
   }
 }

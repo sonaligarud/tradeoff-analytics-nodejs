@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+/* global _: true */
 
 'use strict';
 (function(){
-  var dilemmaServiceUrl = "https://gateway.watsonplatform.net/tradeoff-analytics/api/v1/dilemmas?generate_visualization=false";
+  var dilemmaServiceUrl = 'https://gateway.watsonplatform.net/tradeoff-analytics/api/v1/dilemmas?generate_visualization=false';
 
   /**
    * @typedef ColumnData
@@ -148,7 +149,7 @@
         anc.name = objKeys[Number(anc.name)];
       });
       res.solutions.forEach(function(sol) {
-        if (sol.status === "INCOMPLETE" && _.contains(["MISSING_OBJECTIVE_VALUE", "RANGE_MISMATCH"], sol.status_cause.error_code)) {
+        if (sol.status === 'INCOMPLETE' && _.contains(['MISSING_OBJECTIVE_VALUE', 'RANGE_MISMATCH'], sol.status_cause.error_code)) {
           sol.status_cause.tokens[0] = objKeys[Number(sol.status_cause.tokens[0])];
           minProblem.columns.forEach(function(c) {
             var newMsg = sol.status_cause.message.replace('column: "'+c.key+'"', 'column: "'+c.orgKey+'"');
@@ -161,14 +162,14 @@
     var minProblem = minimizeProblem(problem);
     return getToken.then(function(token) {
       return $.ajax(dilemmaServiceUrl, {
-            method: 'POST',
-            contentType: 'application/json',
-            data: JSON.stringify(minProblem),
-            headers: {
-              "X-Watson-Authorization-Token": token,
-              'X-Watson-Metadata' : 'dataset-name=edmunds;client=ta_demo_app;client-version=2.0;'
-            }
-          })
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(minProblem),
+        headers: {
+          'X-Watson-Authorization-Token': token,
+          'X-Watson-Metadata' : 'dataset-name=edmunds;client=ta_demo_app;client-version=2.0;'
+        }
+      })
           .then(function(response) {
             return {
               problem: problem,
@@ -191,33 +192,33 @@
     }
     dilemma(theProblem)
       .then(function(result){
-          analyzedCols = selectedColumns;
-          showOutputCode(result.resolution);
-          var winners = result.resolution.solutions.filter(function(s) {
-            return s.status === "FRONT";
-          }).map(function(w) {
-            return findOptionByKey(w.solution_ref);
-          });
-          $('.output--frontier-size').text(winners.length);
-          $('.output--dataset-size').text(result.resolution.solutions.length);
-          makeFilters(winners, $('.filter--container'));
-          showResults(winners, $('div.candidates'));
+        analyzedCols = selectedColumns;
+        showOutputCode(result.resolution);
+        var winners = result.resolution.solutions.filter(function(s) {
+          return s.status === 'FRONT';
+        }).map(function(w) {
+          return findOptionByKey(w.solution_ref);
+        });
+        $('.output--frontier-size').text(winners.length);
+        $('.output--dataset-size').text(result.resolution.solutions.length);
+        makeFilters(winners, $('.filter--container'));
+        showResults(winners, $('div.candidates'));
 
-          comparedOps = [];
-          makeComparisonTable();
+        comparedOps = [];
+        makeComparisonTable();
 
-          $('._demo--loading').hide();
-          $('._demo--output').show();
+        $('._demo--loading').hide();
+        $('._demo--output').show();
 
-          var top = document.getElementById('demo-input').offsetTop;
-          window.scrollTo(0, top);
+        var top = document.getElementById('demo-input').offsetTop;
+        window.scrollTo(0, top);
       })
       .fail(function(err){
         $('._demo--loading').hide();
         var txt = err.status + ' ' + err.statusText + ' ' + err.responseText;
         console.error(txt, err);
 
-        var errMsg = "<div>Oops something went wrong. Please try again later.</div>" + "<div>" + txt + "</div>";
+        var errMsg = '<div>Oops something went wrong. Please try again later.</div>' + '<div>' + txt + '</div>';
         $('._demo--error').append(errMsg).show();
       });
   }
@@ -243,7 +244,7 @@
       });
     }
     function makeCategoricalFilter(col, options, node){
-      var vals = options.map( function(op){return op.values[col.key]});
+      var vals = options.map( function(op){return op.values[col.key];});
       var range = col.range;
       range = _.intersection(range, vals);//only actual vals in the data
       range.forEach(function(val){
@@ -266,12 +267,12 @@
       });
     }
     function makeNumericFilter(col, options, filterNode){
-      var vals = options.map( function(op){return op.values[col.key]});
+      var vals = options.map( function(op){return op.values[col.key];});
       var min = _.min(vals);
       var max = _.max(vals);
       var niceMin = (col.range && col.range.low) || Math.floor(Math.pow(10, (Math.log10(min)-2))) * Math.pow(10,2);
       var niceMax = (col.range && col.range.high) || Math.ceil(Math.pow(10, (Math.log10(max)-2))) * Math.pow(10,2);
-      var initValue = col.goal==="min" ? max: niceMin;
+      var initValue = col.goal==='min' ? max: niceMin;
       var wrapper = $('<span class="filter--numeric"></span>');
       wrapper.append(_.template('<span class="low">{{min}}</span>', {min:columnValue(col, niceMin)}));
       var input = $(_.template(
@@ -454,19 +455,19 @@
           rightBetter,
           diffStr ='';
 
-          if(col.type === 'numeric'){
-            rightBetter = (col.goal==='min' && vr<vl) || (col.goal==='max' && vr>=vl);
-            if((vr-vl) < 0)
-              diffStr = '-' + columnValue(col, Math.abs(vr-vl));
-            else
+        if(col.type === 'numeric'){
+          rightBetter = (col.goal==='min' && vr<vl) || (col.goal==='max' && vr>=vl);
+          if((vr-vl) < 0)
+            diffStr = '-' + columnValue(col, Math.abs(vr-vl));
+          else
               diffStr = '+' + columnValue(col, Math.abs(vr-vl));
-          }
-          if(col.type==='categorical'){
-            var il = col.range.indexOf(vl),
-              ir = col.range.indexOf(vr);
-            rightBetter = (col.goal==='min' && ir<il) || (col.goal==='max' && ir>=il);
-            diffStr = vl + '&rarr;' + vr;//right arrow
-          }
+        }
+        if(col.type==='categorical'){
+          var il = col.range.indexOf(vl),
+            ir = col.range.indexOf(vr);
+          rightBetter = (col.goal==='min' && ir<il) || (col.goal==='max' && ir>=il);
+          diffStr = vl + '&rarr;' + vr;//right arrow
+        }
 
         var paraNode = $(_.template(diffParaTemplate, {diff:diffStr}));
         paraNode.toggleClass('rightBetter', rightBetter);
@@ -531,7 +532,7 @@
         if(str.startsWith('"') && str.endsWith('"')){
           return str.substr(1, str.length-2);
         }
-        if(str.startsWith("'") && str.endsWith("'")){
+        if(str.startsWith('\'') && str.endsWith('\'')){
           return str.substr(1, str.length-2);
         }
       }
@@ -556,8 +557,8 @@
   }
   //underscore template matching conig
   _.templateSettings = {
-      interpolate: /\{\{(.+?)\}\}/g
-    };
+    interpolate: /\{\{(.+?)\}\}/g
+  };
 
   /**********START UP**********/
   $(document).ready(function () {
@@ -575,4 +576,4 @@
     $('.panel--button').click(analyze);
   });
 
-}())
+}());

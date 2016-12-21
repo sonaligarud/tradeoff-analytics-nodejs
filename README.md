@@ -124,10 +124,10 @@ Deployment tracking can be disabled by removing `require('cf-deployment-tracker-
 
 [deploy_track_url]: https://github.com/cloudant-labs/deployment-tracker
 
-[service_url]: http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/tradeoff-analytics.html
+[service_url]: http://www.ibm.com/watson/developercloud/tradeoff-analytics.html
 [cloud_foundry]: https://github.com/cloudfoundry/cli
-[getting_started]: http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/doc/getting_started/
-[sign_up]: https://apps.admin.ibmcloud.com/manage/trial/bluemix.html?cm_mmc=WatsonDeveloperCloud-_-LandingSiteGetStarted-_-x-_-CreateAnAccountOnBluemixCLI
+[getting_started]: http://www.ibm.com/watson/developercloud/doc/getting_started/
+[sign_up]: https://console.ng.bluemix.net/registration/
 [.env file]: https://www.npmjs.com/package/dotenv
 [dW answers]: https://developer.ibm.com/answers/smart-spaces/25/watson.html
 [Stack Overflow]: http://stackoverflow.com/questions/tagged/ibm-watson
