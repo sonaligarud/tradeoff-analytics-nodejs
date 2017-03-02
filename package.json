@@ -1,6 +1,6 @@
 {
   "name": "tradeoff-analytics-demo",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "description": "A sample nodejs app for Bluemix that use the Tradeoff Analytics service",
   "repository": {
     "type": "git",
