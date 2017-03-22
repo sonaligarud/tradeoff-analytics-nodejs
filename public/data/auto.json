@@ -11,8 +11,8 @@
       "description": "Manufacturer's Suggested Retail Price (MSRP)"
     },
     {
-      "key": "engineSize",
-      "full_name": "Engine Volume",
+      "key": "placename",
+      "full_name": "placename",
       "type": "numeric",
       "is_objective": false,
       "goal": "max",
